@@ -1,0 +1,21 @@
+{
+  "name": "hono-ejs-sqlite-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "hono": "^4.2.0",
+    "@hono/node-server": "^1.8.0",
+    "ejs": "^3.1.10",
+    "sql.js": "^1.11.0"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/node": "^20.11.0",
+    "@types/sql.js": "^1.4.9",
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  }
+}

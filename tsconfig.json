@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    // コンパイル後のJavaScriptのバージョン
+    "target": "ES2020",
+    // 使用するモジュールシステム（Node.js ESM対応）
+    "module": "NodeNext",
+    // モジュール解決の方法（Node.js ESM対応）
+    "moduleResolution": "NodeNext",
+    // 基本的な型チェックを有効化
+    "strict": true,
+    // CommonJSモジュールをESモジュールのようにインポート可能にする
+    "esModuleInterop": true,
+    // 依存パッケージの型定義ファイルの型チェックをスキップ（ビルド高速化）
+    "skipLibCheck": true,
+    // JSONファイルのインポートを許可
+    "resolveJsonModule": true,
+    // 各ファイルを独立したモジュールとして扱う（tsx等との互換性確保）
+    "isolatedModules": true
+  },
+  "include": ["src"]
+}
