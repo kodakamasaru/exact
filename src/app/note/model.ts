@@ -1,5 +1,5 @@
-import { findAll, findById, insert } from "../../lib/db/helper.js";
-import { validate, type ValidationResult } from "../../lib/validator.js";
+import { findAll, findById, insert, update } from "../../lib/db/helper.js";
+import { validate, type ValidationResult, type ValidationRule } from "../../lib/validator.js";
 
 // ============================================
 // 定数
@@ -28,6 +28,20 @@ export const NoteUrl = {
   create(): string {
     return "/create";
   },
+
+  /**
+   * 編集ページ
+   */
+  edit(id: number): string {
+    return "/edit/" + id;
+  },
+
+  /**
+   * 更新アクション
+   */
+  update(id: number): string {
+    return "/update/" + id;
+  },
 };
 
 /**
@@ -38,6 +52,11 @@ export const NoteTemplate = {
    * 一覧ページ
    */
   index: "note/view/index",
+
+  /**
+   * 編集ページ
+   */
+  edit: "note/view/edit",
 };
 
 // ============================================
@@ -58,8 +77,20 @@ export interface NoteCreateInput {
   content: string;
 }
 
+/** ノート更新時の入力 */
+export interface NoteUpdateInput {
+  title: string;
+  content: string;
+}
+
 /** ノート作成フォームのデータ型 */
 export interface NoteCreateFormData {
+  title: string;
+  content: string;
+}
+
+/** ノート更新フォームのデータ型 */
+export interface NoteUpdateFormData {
   title: string;
   content: string;
 }
@@ -71,6 +102,16 @@ export interface NoteIndexViewData {
   notes: Note[];
   url: typeof NoteUrl;
   formData: NoteCreateFormData;
+  error?: string;
+}
+
+/**
+ * note/edit テンプレートで使用するデータの形式
+ */
+export interface NoteEditViewData {
+  note: Note;
+  url: typeof NoteUrl;
+  formData: NoteUpdateFormData;
   error?: string;
 }
 
@@ -109,6 +150,17 @@ export const Note = {
     return this.find(id) as any;
   },
 
+  /**
+   * 更新
+   */
+  update(id: number, input: NoteUpdateInput): Note {
+    update(TABLE, id, {
+      title: input.title.trim(),
+      content: input.content.trim(),
+    });
+    return this.find(id)!;
+  },
+
   // ============================================
   // バリデーション
   // ============================================
@@ -142,5 +194,49 @@ export const Note = {
         content: input.content.trim(),
       },
     };
+  },
+
+  /**
+   * 更新入力のバリデーション
+   */
+  validateUpdate(input: NoteUpdateInput): ValidationResult<NoteUpdateInput> {
+    // タイトルのバリデーション
+    let error = validate("タイトル", input.title, [
+      "required",
+      "maxLength:100",
+    ]);
+    if (error) {
+      return { success: false, error };
+    }
+
+    // 内容のバリデーション
+    error = validate("内容", input.content, [
+      "required",
+      "maxLength:1000",
+    ]);
+    if (error) {
+      return { success: false, error };
+    }
+
+    return {
+      success: true,
+      data: {
+        title: input.title.trim(),
+        content: input.content.trim(),
+      },
+    };
+  },
+
+  /**
+   * IDのバリデーション
+   */
+  validateId(id: string): ValidationResult<number> {
+    const error = validate("ID", id, ["positiveInteger"]);
+
+    if (error) {
+      return { success: false, error };
+    } else {
+      return { success: true, data: Number(id) };
+    }
   },
 };
