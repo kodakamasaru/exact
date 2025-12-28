@@ -1,4 +1,5 @@
-import { findAll } from "../../lib/db/helper.js";
+import { findAll, findById, insert } from "../../lib/db/helper.js";
+import { validate, type ValidationResult } from "../../lib/validator.js";
 
 // ============================================
 // 定数
@@ -19,6 +20,13 @@ export const NoteUrl = {
    */
   index(): string {
     return "/";
+  },
+
+  /**
+   * 作成アクション
+   */
+  create(): string {
+    return "/create";
   },
 };
 
@@ -42,6 +50,12 @@ export interface Note {
   title: string;
   content: string;
   created_at: string;
+}
+
+/** ノート作成時の入力 */
+export interface NoteCreateInput {
+  title: string;
+  content: string;
 }
 
 /** ノート作成フォームのデータ型 */
@@ -75,5 +89,58 @@ export const Note = {
    */
   find_all(): Note[] {
     return findAll<Note>(TABLE, "id DESC");
+  },
+
+  /**
+   * ID検索
+   */
+  find(id: number): Note | null {
+    return findById<Note>(TABLE, id);
+  },
+
+  /**
+   * 作成
+   */
+  create(input: NoteCreateInput): Note {
+    const id = insert(TABLE, {
+      title: input.title.trim(),
+      content: input.content.trim(),
+    });
+    return this.find(id) as any;
+  },
+
+  // ============================================
+  // バリデーション
+  // ============================================
+
+  /**
+   * 作成入力のバリデーション
+   */
+  validateCreate(input: NoteCreateInput): ValidationResult<NoteCreateInput> {
+    // タイトルのバリデーション
+    let error = validate("タイトル", input.title, [
+      "required",
+      "maxLength:100",
+    ]);
+    if (error) {
+      return { success: false, error };
+    }
+
+    // 内容のバリデーション
+    error = validate("内容", input.content, [
+      "required",
+      "maxLength:1000",
+    ]);
+    if (error) {
+      return { success: false, error };
+    }
+
+    return {
+      success: true,
+      data: {
+        title: input.title.trim(),
+        content: input.content.trim(),
+      },
+    };
   },
 };

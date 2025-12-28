@@ -1,0 +1,66 @@
+<%#
+  ノート入力フォーム
+  @param {NoteCreateFormData} formData - フォーム初期値
+  @param {typeof NoteUrl} url - URL
+%>
+
+<style>
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group__label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .form-group__input,
+  .form-group__textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+
+  .form-group__input:focus,
+  .form-group__textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  .form-group__textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+</style>
+
+<form action="<%= url.create() %>" method="POST">
+  <div class="form-group">
+    <label class="form-group__label" for="title">タイトル</label>
+    <input
+      class="form-group__input"
+      type="text"
+      id="title"
+      name="title"
+      placeholder="ノートのタイトル（必須・100文字以内）"
+      maxlength="100"
+      value="<%= formData.title %>"
+    >
+  </div>
+  <div class="form-group">
+    <label class="form-group__label" for="content">内容</label>
+    <textarea
+      class="form-group__textarea"
+      id="content"
+      name="content"
+      placeholder="ノートの内容（必須・1000文字以内）"
+      maxlength="1000"
+    ><%= formData.content %></textarea>
+  </div>
+  <button class="btn btn--primary" type="submit">追加</button>
+</form>
