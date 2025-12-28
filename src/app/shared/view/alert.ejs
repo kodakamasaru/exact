@@ -1,0 +1,15 @@
+<%#
+  アラートコンポーネント
+
+  @param {string} message - 表示メッセージ
+  @param {string} type - アラートタイプ
+    - "error"   : エラー（赤）
+    - "success" : 成功（緑）
+    - "warning" : 警告（黄）
+%>
+
+<% if (message) { %>
+  <div class="alert" data-type="<%= type || 'error' %>">
+    <%= message %>
+  </div>
+<% } %>
