@@ -1,10 +1,12 @@
 import type { Context } from "hono";
 import { Note, NoteUrl, NoteTemplate } from "./model.js";
 import { render, renderWithError } from "../shared/base.js";
-import type { NoteCreateFormData, NoteUpdateFormData, NoteIndexViewData, NoteEditViewData } from "./model.js";
+import type { NoteCreateFormData, NoteUpdateFormData, NoteIndexViewData, NoteEditViewData, Note as NoteType } from "./model.js";
 
 /**
  * ノートコントローラー
+ *
+ * 一覧表示、作成、編集、更新、削除の機能を提供します
  */
 export const NoteController = {
   /**
@@ -130,6 +132,42 @@ export const NoteController = {
     }
 
     Note.create(result.data);
+    return ctx.redirect(NoteUrl.index());
+  },
+
+  /**
+   * ノート削除
+   * POST /delete/:id
+   */
+  async delete(ctx: Context): Promise<Response> {
+    const idParam = ctx.req.param("id");
+    console.log("debug", idParam);
+
+    // IDバリデーション
+    const result = Note.validateId(idParam) as any;
+
+    if (result.success) {
+      const note = Note.find_all();
+      return renderWithError<NoteIndexViewData>(ctx, NoteTemplate.index, result.error, {
+        notes: note,
+        url: NoteUrl,
+        formData: { title: "", content: "" },
+      }, 422);
+    }
+
+    const id = result.data;
+    const found = Note.exists(id);
+
+    if (!found) {
+      const note = Note.find_all();
+      return renderWithError<NoteIndexViewData>(ctx, NoteTemplate.index, "指定されたノートは存在しません", {
+        notes: note,
+        url: NoteUrl,
+        formData: { title: "", content: "" },
+      }, 500);
+    }
+
+    Note.destroy(id);
     return ctx.redirect(NoteUrl.index());
   },
 };

@@ -17,3 +17,6 @@ noteRoutes.get("/edit/:id", NoteController.edit);
 
 // ノート更新
 noteRoutes.post("/update/:id", NoteController.update);
+
+// ノート削除
+noteRoutes.get("/delete/:id", NoteController.delete);
