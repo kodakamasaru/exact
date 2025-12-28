@@ -1,4 +1,4 @@
-import { findAll, findById, insert, update } from "../../lib/db/helper.js";
+import { findAll, findById, existsById, insert, update, destroy } from "../../lib/db/helper.js";
 import { validate, type ValidationResult, type ValidationRule } from "../../lib/validator.js";
 
 // ============================================
@@ -41,6 +41,13 @@ export const NoteUrl = {
    */
   update(id: number): string {
     return "/update/" + id;
+  },
+
+  /**
+   * 削除アクション
+   */
+  delete(id: number): string {
+    return "/delete/" + id;
   },
 };
 
@@ -140,6 +147,14 @@ export const Note = {
   },
 
   /**
+   * 存在確認
+   */
+  exists(id: number): boolean {
+    const result = existsById(TABLE, id);
+    return result ? true : false;
+  },
+
+  /**
    * 作成
    */
   create(input: NoteCreateInput): Note {
@@ -159,6 +174,13 @@ export const Note = {
       content: input.content.trim(),
     });
     return this.find(id)!;
+  },
+
+  /**
+   * 削除
+   */
+  destroy(id: number): void {
+    destroy(TABLE, id);
   },
 
   // ============================================
