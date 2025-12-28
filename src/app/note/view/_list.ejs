@@ -1,0 +1,21 @@
+<%#
+  ノート一覧
+  @param {Note[]} notes - ノート配列
+  @param {typeof NoteUrl} url - URL
+%>
+
+<style>
+  .note-list {
+    list-style: none;
+  }
+</style>
+
+<% if (notes.length === 0) { %>
+  <p class="empty-message">ノートがありません。新しいノートを作成してください。</p>
+<% } else { %>
+  <ul class="note-list">
+    <% notes.forEach(note => { %>
+      <%- include('./_item', { note, url }) %>
+    <% }) %>
+  </ul>
+<% } %>
