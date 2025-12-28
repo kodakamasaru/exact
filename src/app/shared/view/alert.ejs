@@ -8,7 +8,7 @@
     - "warning" : 警告（黄）
 %>
 
-<% if (message) { %>
+<% if (message && message.trim()) { %>
   <div class="alert" data-type="<%= type || 'error' %>">
     <%= message %>
   </div>
