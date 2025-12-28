@@ -1,0 +1,65 @@
+<%#
+  ノートアイテム
+  @param {Note} note - ノート
+  @param {typeof NoteUrl} url - URL
+%>
+
+<style>
+  .note-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .note-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .note-item__title {
+    font-weight: bold;
+    color: #1e293b;
+    font-size: 1.1rem;
+  }
+
+  .note-item__content {
+    color: #475569;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .note-item__meta {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-top: 8px;
+  }
+
+  .note-item__actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .note-item__actions form {
+    margin: 0;
+    padding: 0;
+    display: inline;
+  }
+</style>
+
+<li class="note-item">
+  <div class="note-item__header">
+    <span class="note-item__title"><%= note.title %></span>
+    <div class="note-item__actions">
+      <form action="<%= url.edit(note.id) %>" method="GET">
+        <button class="btn btn--secondary" type="submit">編集</button>
+      </form>
+      <a href="<%= url.delete(note.id) %>" class="btn btn--danger">削除</a>
+    </div>
+  </div>
+  <p class="note-item__content"><%= note.content %></p>
+  <div class="note-item__meta">作成日時: <%= note.created_at %></div>
+</li>

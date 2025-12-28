@@ -1,0 +1,16 @@
+<%#
+  ノート一覧ページ
+  @param {NoteIndexViewData} - ビューデータ (notes, url, formData, error?)
+%>
+
+<h1 class="page-title">📝 ノート一覧</h1>
+
+<%- include('../../shared/view/alert', { message: error || null, type: 'error' }) %>
+
+<%- include('./_list', { notes, url }) %>
+
+<h2 class="section-title">✏️ 新規ノート作成</h2>
+
+<%- include('./_form', { formData, url }) %>
+
+
